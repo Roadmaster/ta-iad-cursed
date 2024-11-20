@@ -1,0 +1,63 @@
+{
+"node_id": 123456789,
+  "config": {
+    "env": {
+      "FLY_PROCESS_GROUP": "app",
+      "PRIMARY_REGION": "iad"
+    },
+    "init": {},
+    "guest": {
+      "cpu_kind": "shared",
+      "cpus": 1,
+      "memory_mb": 256
+    },
+    "services": [
+      {
+        "protocol": "tcp",
+        "internal_port": 8008,
+        "autostop": false,
+        "autostart": false,
+        "min_machines_running": 0,
+        "ports": [
+          {
+            "port": 80,
+            "handlers": [
+              "http"
+            ]
+          },
+          {
+            "port": 443,
+            "handlers": [
+              "http",
+              "tls"
+            ]
+          }
+        ],
+        "checks": [
+          {
+            "type": "http",
+            "interval": "30s",
+            "timeout": "5s",
+            "grace_period": "1s",
+            "method": "GET",
+            "path": "/"
+          }
+        ],
+        "concurrency": {
+          "hard_limit": 1000,
+          "soft_limit": 100
+        },
+        "force_instance_key": null
+      }
+    ],
+    "image": "registry.fly.io/your-image-here",
+    "restart": {
+      "policy": "on-failure",
+      "max_retries": 10
+    },
+    "stop_config": {
+      "timeout": "5s",
+      "signal": "SIGHUP"
+    }
+  }
+}
